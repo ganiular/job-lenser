@@ -1,0 +1,57 @@
+{%extends 'base.html'%}
+{%block head%}
+    {{ super() }}
+    <style>
+        form{
+            background-color: aqua;
+        }
+    </style>
+{%endblock%}
+
+{%block title%}Signup{%endblock%}
+
+{%block body%}
+<h1>Signup Home</h1>
+<form action="{{ url_for('auth.signup')}}" method="post">
+    <div>
+        <label for="fname">First Name:</label>
+        <input type="text" name="fname">
+    </div>
+    <div>
+        <label for="sname">Surname Name:</label>
+        <input type="text" name="sname">
+    </div>
+    <div>
+        <label for="oname">Other Name:</label>
+        <input type="text" name="oname">
+    </div>
+    <div>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" name="phone">
+    </div>
+    <div>
+        <label for="fname">Email:</label>
+        <input type="email" name="fname">
+    </div>
+    <div>
+        <label for="fname">Date of Birth:</label>
+        <input type="text" name="fname">
+    </div>
+    <div>
+        <label for="fname">Profile Picture:</label>
+        <input type="text" name="fname">
+    </div>
+    <div>
+        <label for="fname">Skills:</label>
+        <input type="text" name="fname">
+    </div>
+    <div>
+        <label for="fname">Qualification:</label>
+        <input type="text" name="fname">
+    </div>
+    <div>
+        <label for="fname">First Name:</label>
+        <input type="text" name="fname">
+    </div>
+</form>
+{%endblock%}
