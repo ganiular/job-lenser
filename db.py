@@ -30,7 +30,7 @@ def close():
 
 # Regsiter this function with the app response closure listener
 # to help close the database connection regardless of error
-def on_response_close(error=None):
-    if error is not None:
-        print('Error on_response_close:', error)
+def on_response_close(exception=None):
+    if exception is not None:
+        print('Error on_response_close:', exception)
     close()

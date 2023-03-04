@@ -1,0 +1,43 @@
+main{
+    text-align: center;
+    min-height: 70vh;
+    line-height: 70vh;
+}
+div.center-block{
+    border-radius: 16px;
+    padding: 24px;
+    line-height: 1;
+    text-align: center;
+    display: inline-block;
+    box-sizing: content-box;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+    /* border: 1px solid; */
+    box-shadow: 1px 1px 4px gray;
+}
+
+div.center-block h1{
+    color: cornflowerblue;
+}
+
+a.button{
+    display: inline-block;
+    background: cornsilk;
+    padding: 10px 20px;
+    min-width: 70px;
+    text-align: center;
+    text-decoration: none;
+    font-size: large;
+    margin: 8px;
+    border-radius: 24px;
+}
+
+div.center-block > div {
+    background-color: cornflowerblue;
+    padding: 24px 16px;
+    border-radius: 16px;
+    color: white;
+    margin: 0 10px;
+    font-size: medium;
+}

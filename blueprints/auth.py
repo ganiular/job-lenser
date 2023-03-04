@@ -1,5 +1,8 @@
+import functools
+import os
 from flask import Blueprint, render_template, request, redirect, session
 import db
+
 
 bp = Blueprint('auth', __name__)
 
@@ -91,22 +94,123 @@ def signin_post():
             return redirect('/signup_applicant')
     else:
         employer = conn.execute(
-            'SELECT * FROM employer WHERE user_id=?', [user['id']]
+            'SELECT * FROM employers WHERE user_id=?', [user['id']]
         ).fetchone()
         if employer is None:
             session['temporary_id'] = user['id']
             return redirect('/signup_employer')
     session['user_id'] = user['id']
     return redirect('/')
-            
+
+@bp.get('/signout')
+def signout():
+    # Clear user session from the client
+    session.clear()
+    return redirect('/')            
 
 # NOTE: These pages can only be visited, after user have logged in
 
 @bp.get('/signup_employer')
 def signup_employer():
+    # requires temporary_id or user_id in the client session
+    # and account_type == applicant
+    temporary_id = session.get('temporary_id')
+    user_id = session.get('user_id')
+    account_type = session.get('account_type')
+    if not(temporary_id or user_id):
+        return redirect('/signin')
+    elif account_type != 'employer':
+        return redirect('/signup_applicant')
+    
     return render_template('signup_employer.html')
+
+@bp.post('/signup_employer')
+def signup_employer_post():
+    org_name = request.form.get('org-name')
+    org_picture = request.files.get('org-picture')
+    
+    user_id = session.get('user_id') or session.get('temporary_id')
+    
+    conn = db.connect()
+    conn.execute('''
+        REPLACE INTO employers(user_id, org_name, org_profile_picture)
+        VALUES(?,?,?)''',
+        [user_id, org_name, org_picture.filename])
+    
+    # save uploaded files
+    # create directories if not exist
+    picture_path = os.path.join('uploads','profile-pictures',str(user_id))
+    
+    if not os.path.exists(picture_path):
+        os.makedirs(picture_path)
+    
+    org_picture.save(os.path.join(picture_path, org_picture.filename))
+    
+    # remove temporary_id and set user_id
+    session.pop('temporary_id')
+    session['user_id'] = user_id
+
+    conn.commit()
+    
+    return redirect('/')
+    
 
 @bp.get('/signup_applicant')
 def signup_applicant():
-    return render_template('signup_applicant.html')
+    # requires temporary_id or user_id in the client session
+    # and account_type == applicant
+    temporary_id = session.get('temporary_id')
+    user_id = session.get('user_id')
+    account_type = session.get('account_type')
+    if not(temporary_id or user_id):
+        return redirect('/signin')
+    elif account_type != 'applicant':
+        return redirect('/signup_employer')
+    
+    conn = db.connect()
+    qualifications = conn.execute('SELECT * FROM qualifications ORDER BY level DESC' ).fetchall()
+    
+    return render_template('signup_applicant.html', qualifications=qualifications)
 
+@bp.post('/signup_applicant')
+def signup_applicant_post():
+    fname = request.form.get('fname')
+    sname = request.form.get('sname')
+    oname = request.form.get('oname')
+    dob = request.form.get('date-of-birth')
+    qualification = request.form.get('qualification')
+    p_picture = request.files.get('p-picture')
+    resume = request.files.get('resume')
+    
+    # remove spaces and convert it to lowercase
+    skills = request.form.get('skills').replace(' ', '').strip(',').lower()
+    
+    user_id = session.get('user_id') or session.get('temporary_id')
+
+    conn = db.connect()
+    conn.execute('''
+        REPLACE INTO applicants(user_id, first_name, surname, 
+        other_name, dob, qualification_id, profile_picture, resume, skills)
+        VALUES(?,?,?,?,?,?,?,?,?)''',
+        [user_id, fname, sname, oname, dob, qualification, p_picture.filename, resume.filename, skills])
+    
+    # save uploaded files
+    # create directories if not exist
+    picture_path = os.path.join('uploads','profile-pictures',str(user_id))
+    resume_path = os.path.join('uploads', 'resumes', str(user_id))
+    
+    if not os.path.exists(picture_path):
+        os.makedirs(picture_path)
+    if not os.path.exists(resume_path):
+        os.makedirs(resume_path)
+    
+    p_picture.save(os.path.join(picture_path, p_picture.filename))
+    resume.save(os.path.join(resume_path, resume.filename))
+
+    # remove temporary_id and set user_id
+    session.pop('temporary_id')
+    session['user_id'] = user_id
+
+    conn.commit()
+    
+    return redirect('/')

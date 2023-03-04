@@ -1,57 +1,53 @@
 {%extends 'base.html'%}
 {%block head%}
     {{ super() }}
-    <style>
-        form{
-            background-color: aqua;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth_form.css') }}">
 {%endblock%}
 
-{%block title%}Signup{%endblock%}
+{%block header%}
+    {{ super() }}
+    <div class="title">{%block title%}Complete Your Registration{%endblock%}</div>
+{%endblock%}
 
 {%block body%}
-<h1>Signup Home</h1>
-<form action="{{ url_for('auth.signup')}}" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     <div>
         <label for="fname">First Name:</label>
-        <input type="text" name="fname">
+        <input type="text" name="fname" value="{{request.form['fname']}}" required>
     </div>
     <div>
         <label for="sname">Surname Name:</label>
-        <input type="text" name="sname">
+        <input type="text" name="sname" value="{{request.form['sname']}}" required>
     </div>
     <div>
         <label for="oname">Other Name:</label>
-        <input type="text" name="oname">
+        <input type="text" name="oname" value="{{request.form['oname']}}">
     </div>
     <div>
-        <label for="phone">Phone Number:</label>
-        <input type="tel" name="phone">
+        <label for="date-of-birth">Date of Birth:</label>
+        <input type="date" name="date-of-birth" value="{{request.form['date-of-birth']}}" required>
     </div>
     <div>
-        <label for="fname">Email:</label>
-        <input type="email" name="fname">
+        <label for="skills">Skills you have:</label>
+        <input type="text" name="skills" value="{{request.form['skills']}}" placeholder="List of skills seperate with comma" required>
     </div>
     <div>
-        <label for="fname">Date of Birth:</label>
-        <input type="text" name="fname">
+        <label for="qualification">Qualification:</label>
+        <select name="qualification" id="account-type" required>
+            {% for qualification in qualifications %}
+            <option value="{{qualification['id']}}" {{'selected' if qualification['id'] == request.form['qualification'] else '' }}>{{qualification['qualification']}}</option>
+            {% endfor %}
+        </select>
     </div>
     <div>
-        <label for="fname">Profile Picture:</label>
-        <input type="text" name="fname">
+        <label for="resume">Resume:</label>
+        <input type="file" accept="image/*" name="resume" required>
     </div>
     <div>
-        <label for="fname">Skills:</label>
-        <input type="text" name="fname">
+        <label for="p-picture">Profile Picture:</label>
+        <input type="file" accept="image/*" name="p-picture" required>
     </div>
-    <div>
-        <label for="fname">Qualification:</label>
-        <input type="text" name="fname">
-    </div>
-    <div>
-        <label for="fname">First Name:</label>
-        <input type="text" name="fname">
-    </div>
+    <button>Submit</button>
+    {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}
 </form>
 {%endblock%}

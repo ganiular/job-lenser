@@ -1,26 +1,25 @@
 {%extends 'base.html'%}
 {%block head%}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='auth_form.css') }}">
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='auth_form.css') }}">
 {%endblock%}
 
-{%block title%}Signin{%endblock%}
+{%block header%}
+    {{ super() }}
+    <div class="title">{%block title%}Sign In{%endblock%}</div>
+{%endblock%}
 
 {%block body%}
-<h1>Signin</h1>
-<main>
-    <form action="{{ url_for('auth.signin')}}" method="post">
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" name="email" value="{{request.form['email']}}" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" minlength="6" required>
-        </div>
-        <button>Signin</button>
-        {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}
-    </form>
-</main>
-
+<form action="{{ url_for('auth.signin')}}" method="post">
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" name="email" value="{{request.form['email']}}" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" name="password" minlength="6" required>
+    </div>
+    <button>Signin</button>
+    {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}
+</form>
 {%endblock%}
