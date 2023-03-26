@@ -34,6 +34,8 @@
     <div>
         <label for="qualification">Qualification:</label>
         <select name="qualification" id="account-type" required>
+            <!-- <option value="" disabled selected> <i>-- select an option --</i> </option> -->
+            <option value="" hidden selected> <i>-- select an option --</i> </option>
             {% for qualification in qualifications %}
             <option value="{{qualification['id']}}" {{'selected' if qualification['id'] == request.form['qualification'] else '' }}>{{qualification['qualification']}}</option>
             {% endfor %}

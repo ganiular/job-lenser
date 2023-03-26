@@ -1,1 +1,65 @@
-{% extends 'base.html' %}
+{%extends 'base.html'%}
+
+{%block menulist%}
+    {% if (user_id == session['user_id']) %}
+    <li><a href="/profile/edit">Edit Profile</a></li>
+    {% endif %}
+    {{ super() }}
+{%endblock%}
+    
+{% block body %}
+    {% if applicant %}
+    <div class="title">
+        <img class="profile-pic" src="/uploads/profile-pictures/{{applicant.id}}/{{applicant.profile_picture}}" alt="profile pic">
+        <div>{{applicant.first_name + ' ' + applicant.surname + ' ' + applicant.other_name }}</div>
+        <span class="caption">Applicant</span>
+    </div>
+    <section>
+        <h2 class="header">Details</h2>
+        <hr>
+        First name:
+        <div class="detail-field">{{applicant.first_name}}</div>
+        Surname:
+        <div class="detail-field">{{applicant.surname}}</div>
+        {% if applicant.other_name %}
+        Other name:
+        <div class="detail-field">{{applicant.other_name}}</div>
+        {%endif%}
+        Qualification:
+        <div class="detail-field">{{applicant.qualification}}</div>
+        Date of birth:
+        <div class="detail-field">{{applicant.dob}}</div>
+        Skills:
+        <ul class="detail-field">
+            {% for skill in applicant.skills.split(',') %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+        Resume:
+        <div class="detail-field"><img src="/uploads/resumes/{{applicant.id}}/{{applicant.resume}}" alt=""></div>
+    </section>
+    {% else %} 
+    <div class="title">
+        <img class="profile-pic" src="/uploads/profile-pictures/{{employer.id}}/{{employer.org_profile_picture}}" alt="profile pic">
+        <div>{{ employer.org_name}}</div>
+        <span class="caption">Employer</span>
+    </div>
+    <section>
+        <h2 class="header">Details</h2>
+        <hr>
+        Job description:
+        <div class="detail-field">{{employer.job_discription}}</div>
+        Job specification:
+        <div class="detail-field">{{employer.job_specification}}</div>
+        <hr>
+    </section>
+    <section>
+        <h2 class="header">Applicants</h2>
+        <hr>
+        <!-- List of applicants here -->
+        <div>
+
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}
