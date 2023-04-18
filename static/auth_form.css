@@ -18,7 +18,7 @@ form{
 }
 
 /* select all form input here and make it their width 100% */
-form input, form select{
+form input, form select, form textarea{
     outline: none;
     width: 100%;
     padding: 4px 10px;

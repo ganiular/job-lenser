@@ -10,25 +10,28 @@
 {% block body %}
     {% if applicant %}
     <div class="title">
-        <img class="profile-pic" src="/uploads/profile-pictures/{{applicant.id}}/{{applicant.profile_picture}}" alt="profile pic">
-        <div>{{applicant.first_name + ' ' + applicant.surname + ' ' + applicant.other_name }}</div>
+        <img class="profile-pic" src="/uploads/profile-pictures/{{applicant.user_id}}/{{applicant.profile_picture}}" alt="profile pic">
+        <div>{{applicant.user.name }}</div>
         <span class="caption">Applicant</span>
     </div>
     <section>
-        <h2 class="header">Details</h2>
+        <header>
+            <h2 class="header">Details</h2>
+            {% if session['account_type'] == 'employer' %}
+            <a href="{{url_for('account.message', applicant_id=applicant.user.id)}}" class="action"><span class="icon">&#128231;</span> Send Job Offer</a>
+            {% endif %}
+        </header>
         <hr>
-        First name:
-        <div class="detail-field">{{applicant.first_name}}</div>
-        Surname:
-        <div class="detail-field">{{applicant.surname}}</div>
-        {% if applicant.other_name %}
-        Other name:
-        <div class="detail-field">{{applicant.other_name}}</div>
-        {%endif%}
+        Full Name:
+        <div class="detail-field">{{applicant.user.name}}</div>
+        Email:
+        <div class="detail-field">{{applicant.user.email}}</div>
+        Phone Number:
+        <div class="detail-field">{{applicant.user.phone}}</div>
         Qualification:
-        <div class="detail-field">{{applicant.qualification}}</div>
+        <div class="detail-field">{{applicant.qualification.name}}</div>
         Date of birth:
-        <div class="detail-field">{{applicant.dob}}</div>
+        <div class="detail-field">{{applicant.date_of_birth}}</div>
         Skills:
         <ul class="detail-field">
             {% for skill in applicant.skills.split(',') %}
@@ -36,30 +39,42 @@
             {% endfor %}
         </ul>
         Resume:
-        <div class="detail-field"><img src="/uploads/resumes/{{applicant.id}}/{{applicant.resume}}" alt=""></div>
+        <div class="detail-field"><img src="/uploads/resumes/{{applicant.user_id}}/{{applicant.resume}}" alt=""></div>
     </section>
     {% else %} 
     <div class="title">
-        <img class="profile-pic" src="/uploads/profile-pictures/{{employer.id}}/{{employer.org_profile_picture}}" alt="profile pic">
-        <div>{{ employer.org_name}}</div>
+        <img class="profile-pic" src="/uploads/profile-pictures/{{employer.user_id}}/{{employer.profile_picture}}" alt="profile pic">
+        <div>{{ employer.user.name }}</div>
         <span class="caption">Employer</span>
     </div>
     <section>
         <h2 class="header">Details</h2>
         <hr>
-        Job description:
-        <div class="detail-field">{{employer.job_discription}}</div>
-        Job specification:
-        <div class="detail-field">{{employer.job_specification}}</div>
-        <hr>
+        Full Name:
+        <div class="detail-field">{{employer.user.name}}</div>
+        Sector/Faculty:
+        <div class="detail-field">{{employer.sector}}</div>
     </section>
     <section>
-        <h2 class="header">Applicants</h2>
+        <header>
+            <h2 class="header">Job Offers</h2>
+            {% if user_id == session['user_id'] and session['account_type'] == 'employer' %}
+            <a href="{{url_for('job.create_job')}}" class="action"><span class="icon">&#10133;</span> Create New Job Offer</a>
+            {% endif %}
+        </header>
         <hr>
-        <!-- List of applicants here -->
-        <div>
-
-        </div>
+        <ol>
+            {% for job_offer in employer.job_offers %}
+            <li>
+                <a href="/jobs/{{job_offer.id}}">{{job_offer.title}}</a>
+            </li>
+        {% endfor %}
+        </ol>
+        
+        <!-- Job description:
+        <div class="detail-field">{{employer.job_discription}}</div>
+        Job specification:
+        <div class="detail-field">{{employer.job_specification}}</div> -->
     </section>
     {% endif %}
 {% endblock %}

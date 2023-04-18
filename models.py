@@ -9,7 +9,7 @@ class User(Base):
     name = Column(String(50), nullable=False)
     email = Column(String(120), unique=True, nullable=False)
     phone = Column(String, nullable=False)
-    password = Column(String, nullable=False)
+    password_hashed = Column(String, nullable=False)
     account_type = Column(String, nullable=False)
 
 class Applicant(Base):
@@ -64,8 +64,8 @@ class Message(Base):
 
 def pulate_users():
     from datetime import date
-    user1 = User(name='Bob Alice', email='user1@example.com', phone='08030424356', password='123456', account_type='applicant')
-    user2 = User(name='Mr Joel Smith', email='user2@example.com', phone='08079427821', password='123456', account_type='employer')
+    user1 = User(name='Bob Alice', email='user1@example.com', phone='08030424356', password_hashed='pbkdf2:sha256:260000$NLH6aGzmd1mIX07e$3f481d32ce597f3fa3c5c30984f065f3bf84069936874e773d72937cbf48574b', account_type='applicant')
+    user2 = User(name='Mr Joel Smith', email='user2@example.com', phone='08079427821', password_hashed='pbkdf2:sha256:260000$NLH6aGzmd1mIX07e$3f481d32ce597f3fa3c5c30984f065f3bf84069936874e773d72937cbf48574b', account_type='employer')
     db_session.add(user1)
     db_session.add(user2)
     db_session.flush()

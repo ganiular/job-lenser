@@ -1,7 +1,9 @@
-import functools
 import os
+from datetime import date
 from flask import Blueprint, render_template, request, redirect, session
-import db
+from werkzeug.security import check_password_hash, generate_password_hash
+from database import db_session as db
+from models import User, Applicant, Employer, Qualification
 
 
 bp = Blueprint('auth', __name__)
@@ -13,18 +15,21 @@ def signup():
 @bp.post('/signup')
 def signup_post():
     # get all form fields
+    name = request.form.get('name', '').strip()
     account_type = request.form.get('account-type')
     email = request.form.get('email')
     phone = request.form.get('phone')
     password = request.form.get('password')
     cpassword = request.form.get('cpassword')
 
-    conn = db.connect()
+    # conn = db.connect()
 
     # validate inputs
     error = None
-    if not(account_type and email and phone and password and cpassword):
+    if not(name and account_type and email and phone and password and cpassword):
         error='All fields are required'
+    elif not(name.isalpha()) and len(name) < 3:
+        error = "Invalid name"
     elif account_type not in ['applicant', 'employer']:
         error='Invalid account type'
     elif not phone.isdigit():
@@ -34,19 +39,29 @@ def signup_post():
     elif password != cpassword:
         error='Password mismatch'
     else:
-        user = conn.execute('SELECT * FROM users WHERE email=?', [email]).fetchone()
+        user = db.query(User).filter(User.email == email).first()
+        print(user)
+        # user = conn.execute('SELECT * FROM users WHERE email=?', [email]).fetchone()
         if user is not None:
             error='The email is ready registered'
 
     if error is not None:
         return render_template('signup.html', error=error)
     
-    # now that the input fields as been validated, keep user credentials
-    conn.execute(
-        'INSERT INTO users(email, phone, password, account_type) VALUES(?,?,?,?)',
-        [email, phone, password, account_type])
-    conn.commit()
+    # keep password secret by tranforming it
+    password_hashed = generate_password_hash(password)
 
+    # now that the input fields as been validated, keep user credentials
+    user = User(
+        name=name, 
+        email=email, 
+        phone=phone, 
+        password_hashed=password_hashed, 
+        account_type=account_type
+    )
+    db.add(user)
+    db.commit()
+    
     return redirect('/signin')
 
 @bp.get('/signin')
@@ -58,18 +73,16 @@ def signin_post():
     # get all form fields
     email = request.form.get('email')
     password = request.form.get('password')
-    
-    conn = db.connect()
 
     # validate inputs
     error = None
     if not(email and password):
         error='All fields are required'
     else:
-        user = conn.execute('SELECT * FROM users WHERE email=?', [email]).fetchone()
+        user = db.query(User).filter(User.email == email).first()
         if user is None:
             error='Unkown user'
-        elif user['password'] != password:
+        elif not check_password_hash(user.password_hashed, password):
             error='Incorrect password'
 
     if error is not None:
@@ -84,22 +97,19 @@ def signin_post():
     # to index page.
     # Clear any prevoius user session, and create a new one
     session.clear()
-    session['account_type'] = user['account_type']
-    if user['account_type'] == 'applicant':
-        applicant = conn.execute(
-            'SELECT * FROM applicants WHERE user_id=?', [user['id']]
-        ).fetchone()
+    session['account_type'] = user.account_type
+    if user.account_type == 'applicant':
+        applicant = db.query(Applicant).filter(Applicant.user_id == user.id).first()
+
         if applicant is None:
-            session['temporary_id'] = user['id']
+            session['temporary_id'] = user.id
             return redirect('/signup_applicant')
     else:
-        employer = conn.execute(
-            'SELECT * FROM employers WHERE user_id=?', [user['id']]
-        ).fetchone()
+        employer = db.query(Employer).filter(Employer.user_id == user.id).first()
         if employer is None:
-            session['temporary_id'] = user['id']
+            session['temporary_id'] = user.id
             return redirect('/signup_employer')
-    session['user_id'] = user['id']
+    session['user_id'] = user.id
     return redirect('/')
 
 @bp.get('/signout')
@@ -126,19 +136,14 @@ def signup_employer():
 
 @bp.post('/signup_employer')
 def signup_employer_post():
-    org_name = request.form.get('org-name')
+    sector = request.form.get('org-name')
     org_picture = request.files.get('org-picture')
     
     user_id = session.get('user_id') or session.get('temporary_id')
     
-    conn = db.connect()
-    conn.execute('''
-        REPLACE INTO employers(user_id, org_name, org_profile_picture)
-        VALUES(?,?,?)''',
-        [user_id, org_name, org_picture.filename])
+    employer = Employer(user_id=user_id, sector=sector, profile_picture=org_picture.filename)
+    db.add(employer)
     
-    # save uploaded files
-    # create directories if not exist
     picture_path = os.path.join('uploads','profile-pictures',str(user_id))
     
     if not os.path.exists(picture_path):
@@ -150,7 +155,7 @@ def signup_employer_post():
     session.pop('temporary_id')
     session['user_id'] = user_id
 
-    conn.commit()
+    db.commit()
     
     return redirect('/')
     
@@ -167,17 +172,14 @@ def signup_applicant():
     elif account_type != 'applicant':
         return redirect('/signup_employer')
     
-    conn = db.connect()
-    qualifications = conn.execute('SELECT * FROM qualifications ORDER BY level DESC' ).fetchall()
+    qualifications = db.query(Qualification).order_by(Qualification.level.desc()).all()
     
     return render_template('signup_applicant.html', qualifications=qualifications)
 
 @bp.post('/signup_applicant')
 def signup_applicant_post():
-    fname = request.form.get('fname')
-    sname = request.form.get('sname')
-    oname = request.form.get('oname')
     dob = request.form.get('date-of-birth')
+    print(dob)
     qualification = request.form.get('qualification')
     p_picture = request.files.get('p-picture')
     resume = request.files.get('resume')
@@ -187,12 +189,15 @@ def signup_applicant_post():
     
     user_id = session.get('user_id') or session.get('temporary_id')
 
-    conn = db.connect()
-    conn.execute('''
-        REPLACE INTO applicants(user_id, first_name, surname, 
-        other_name, dob, qualification_id, profile_picture, resume, skills)
-        VALUES(?,?,?,?,?,?,?,?,?)''',
-        [user_id, fname, sname, oname, dob, qualification, p_picture.filename, resume.filename, skills])
+    applicant = Applicant(
+        user_id=user_id,
+        qualification_level = qualification,
+        date_of_birth = date.fromisoformat(dob),
+        profile_picture=p_picture.filename,
+        resume=resume.filename,
+        skills=skills
+    )
+    db.add(applicant)
     
     # save uploaded files
     # create directories if not exist
@@ -211,6 +216,6 @@ def signup_applicant_post():
     session.pop('temporary_id')
     session['user_id'] = user_id
 
-    conn.commit()
+    db.commit()
     
     return redirect('/')

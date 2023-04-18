@@ -12,18 +12,6 @@
 {%block body%}
 <form action="" method="post" enctype="multipart/form-data">
     <div>
-        <label for="fname">First Name:</label>
-        <input type="text" name="fname" value="{{request.form['fname']}}" required>
-    </div>
-    <div>
-        <label for="sname">Surname Name:</label>
-        <input type="text" name="sname" value="{{request.form['sname']}}" required>
-    </div>
-    <div>
-        <label for="oname">Other Name:</label>
-        <input type="text" name="oname" value="{{request.form['oname']}}">
-    </div>
-    <div>
         <label for="date-of-birth">Date of Birth:</label>
         <input type="date" name="date-of-birth" value="{{request.form['date-of-birth']}}" required>
     </div>
@@ -32,22 +20,21 @@
         <input type="text" name="skills" value="{{request.form['skills']}}" placeholder="List of skills seperate with comma" required>
     </div>
     <div>
-        <label for="qualification">Qualification:</label>
+        <label for="qualification">Select Qualification:</label>
         <select name="qualification" id="account-type" required>
-            <!-- <option value="" disabled selected> <i>-- select an option --</i> </option> -->
-            <option value="" hidden selected> <i>-- select an option --</i> </option>
+            <option value="" hidden selected> ---------- </option>
             {% for qualification in qualifications %}
-            <option value="{{qualification['id']}}" {{'selected' if qualification['id'] == request.form['qualification'] else '' }}>{{qualification['qualification']}}</option>
+            <option value="{{qualification.level}}" {{'selected' if qualification.level == request.form['qualification'] else '' }}>{{qualification.name}}</option>
             {% endfor %}
         </select>
     </div>
     <div>
-        <label for="resume">Resume:</label>
-        <input type="file" accept="image/*" name="resume" required>
-    </div>
-    <div>
         <label for="p-picture">Profile Picture:</label>
         <input type="file" accept="image/*" name="p-picture" required>
+    </div>
+    <div>
+        <label for="resume">Resume:</label>
+        <input type="file" accept="image/*" name="resume" required>
     </div>
     <button>Submit</button>
     {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}

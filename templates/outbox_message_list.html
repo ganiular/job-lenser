@@ -1,0 +1,31 @@
+{%extends 'base.html'%}
+
+{%block head%}
+{{ super() }}
+<link rel="stylesheet" href="/static/block_list.css">
+{%endblock%}
+
+{%block body%}
+<div class="title">
+    <img class="profile-pic" src="/uploads/profile-pictures/{{employer.user_id}}/{{employer.profile_picture}}" alt="">
+    <div>{{employer.user.name }}</div>
+    <span class="caption">Employer</span>
+</div>
+<div>
+    <h2 class="header">Outbox Messages</h2>
+    <hr>
+    {% for message in messages %}
+        <div class="list-item">
+            <img src="/uploads/profile-pictures/{{message.receiver_id}}/{{message.receiver.profile_picture}}" alt="" class="profile-img">
+            <div class="details">
+                <div class="row">
+                    <a href="/profile/{{message.receiver_id}}" class="name">{{message.receiver.user.name}}</a>
+                    <span>{{message.time_created}}</span>
+                </div>
+                <div><span class="label">job offer</span> {{message.job_offer.title}}</div>
+                <div class="msg">{{message.message}}</div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{%endblock%}

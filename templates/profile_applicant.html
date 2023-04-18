@@ -1,0 +1,44 @@
+{%extends 'base.html'%}
+
+{%block menulist%}
+    {% if (user_id == session['user_id']) %}
+    <li><a href="/profile/edit">Edit Profile</a></li>
+    <li><a href="/profile/messages">My Inbox</a></li>
+    {% endif %}
+    {{ super() }}
+{%endblock%}
+    
+{% block body %}
+    <div class="title">
+        <img class="profile-pic" src="/uploads/profile-pictures/{{applicant.user_id}}/{{applicant.profile_picture}}" alt="">
+        <div>{{applicant.user.name }}</div>
+        <span class="caption">Applicant</span>
+    </div>
+    <section>
+        <header>
+            <h2 class="header">Details</h2>
+            {% if session['account_type'] == 'employer' %}
+            <a href="{{url_for('account.message', applicant_id=applicant.user.id)}}" class="action"><span class="icon">&#128231;</span> Send Job Offer</a>
+            {% endif %}
+        </header>
+        <hr>
+        Full Name:
+        <div class="detail-field">{{applicant.user.name}}</div>
+        Email:
+        <div class="detail-field">{{applicant.user.email}}</div>
+        Phone Number:
+        <div class="detail-field">{{applicant.user.phone}}</div>
+        Qualification:
+        <div class="detail-field">{{applicant.qualification.name}}</div>
+        Date of birth:
+        <div class="detail-field">{{applicant.date_of_birth}}</div>
+        Skills:
+        <ul class="detail-field">
+            {% for skill in applicant.skills.split(',') %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+        Resume:
+        <div class="detail-field"><img src="/uploads/resumes/{{applicant.user_id}}/{{applicant.resume}}" alt=""></div>
+    </section>
+{% endblock %}

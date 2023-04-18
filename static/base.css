@@ -34,6 +34,7 @@ body{margin-bottom: 52px;}
     border: 1px solid #ccc;
     border-radius: 50px;
     object-fit: cover;
+    background-color: antiquewhite;
 }
 .caption{
     font-size: initial;
@@ -72,8 +73,14 @@ footer marquee{
     font-style: italic;
     border: 1px solid cornflowerblue;
     border-radius: 16px;
+    color: cornflowerblue;
 }
-section > .header{
+section header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+h2.header{
     margin-bottom: 0;
 }
 .detail-field{
@@ -84,3 +91,18 @@ section > .header{
     list-style-position: inside;
 }
 .detail-field img{max-width: 100%;display: block;margin: auto;}
+
+a.action{
+    text-decoration: none;
+    padding: 4px 8px;
+    display: flex;
+    gap: 4px;
+    font-style: normal;
+    border: 1px solid cornflowerblue;
+    border-radius: 16px;
+    color: cornflowerblue;
+    align-items: center;
+}
+
+.icon {
+}

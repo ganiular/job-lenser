@@ -1,0 +1,42 @@
+{%extends 'base.html'%}
+{%block head%}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='auth_form.css') }}">
+{%endblock%}
+
+{%block header%}
+    {{ super() }}
+    <div class="title">{%block title%}Create Job Offer{%endblock%}</div>
+{%endblock%}
+
+{%block body%}
+<form action="{{ url_for('job.create_job')}}" method="post">
+    <div>
+        <label for="title">Job Title:</label>
+        <input type="text" name="title" minlength="6" value="{{request.form['title']}}" required>
+    </div>
+    <div>
+        <label for="qualification">Select Minimum Qualification:</label>
+        <select name="qualification" id="qualification" required>
+            <option value="" hidden selected> ---------- </option>
+            {% for qualification in qualifications %}
+            <option value="{{qualification.level}}" {{'selected' if qualification.level == request.form['qualification'] else '' }}>{{qualification.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="skills">Skills Wanted:</label>
+        <input type="text" name="skills" value="{{request.form['skills']}}" placeholder="List of skills seperate with comma" required>
+    </div>
+    <div>
+        <label for="location">Location:</label>
+        <input type="text" name="location" minlength="6" value="{{request.form['location']}}" required>
+    </div>
+    <div>
+        <label for="location">Description:</label>
+        <textarea name="description" id="description" cols="30" rows="3" placeholder="" value="{{request.form['description']}}" required minlength="20"></textarea>
+    </div>
+    <button>Create</button>
+    {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}
+</form>
+{%endblock%}

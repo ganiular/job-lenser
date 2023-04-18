@@ -1,0 +1,46 @@
+{%extends 'base.html'%}
+
+{%block menulist%}
+    {% if (user_id == session['user_id']) %}
+    <li><a href="/profile/edit">Edit Profile</a></li>
+    <li><a href="/profile/messages">My Outbox</a></li>
+    {% endif %}
+    {{ super() }}
+{%endblock%}
+    
+{% block body %}
+    <div class="title">
+        <img class="profile-pic" src="/uploads/profile-pictures/{{employer.user_id}}/{{employer.profile_picture}}" alt="">
+        <div>{{ employer.user.name }}</div>
+        <span class="caption">Employer</span>
+    </div>
+    <section>
+        <h2 class="header">Details</h2>
+        <hr>
+        Full Name:
+        <div class="detail-field">{{employer.user.name}}</div>
+        Sector/Faculty:
+        <div class="detail-field">{{employer.sector}}</div>
+    </section>
+    <section>
+        <header>
+            <h2 class="header">Job Offers</h2>
+            {% if user_id == session['user_id'] and session['account_type'] == 'employer' %}
+            <a href="{{url_for('job.create_job')}}" class="action"><span class="icon">&#10133;</span> Create New Job Offer</a>
+            {% endif %}
+        </header>
+        <hr>
+        <ol>
+            {% for job_offer in employer.job_offers %}
+            <li>
+                <a href="/jobs/{{job_offer.id}}">{{job_offer.title}}</a>
+            </li>
+        {% endfor %}
+        </ol>
+        
+        <!-- Job description:
+        <div class="detail-field">{{employer.job_discription}}</div>
+        Job specification:
+        <div class="detail-field">{{employer.job_specification}}</div> -->
+    </section>
+{% endblock %}

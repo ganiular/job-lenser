@@ -7,12 +7,13 @@ app.config.from_mapping(
     SECRET_KEY='dev'
 )
 
-from blueprints import auth, account
-import db
+from blueprints import auth, account, job
+import database as db
 
 # register blueprints
 app.register_blueprint(auth.bp)
 app.register_blueprint(account.bp)
+app.register_blueprint(job.bp)
 
 # file downloads
 @app.get('/uploads/<path:filename>')
@@ -28,4 +29,7 @@ def page_not_found(exeption):
     print('Error: page not found')
     return render_template('404.html'), 404
 
-app.run(debug=True)
+db.init_db()
+
+if __name__ == '__main__':
+    app.run(debug=True)

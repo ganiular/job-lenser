@@ -1,8 +1,9 @@
 # Mine stuff
-appdata.db
 uploads/
-venv
+venv/
 templates/test.html
+*.db
+_db.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
