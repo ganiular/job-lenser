@@ -1,20 +1,51 @@
+body {
+    background-color: antiquewhite;
+    background-image: url('/static/images/senate_building.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+}
 main{
     text-align: center;
-    /* min-height: 70vh; */
-    /* line-height: 70vh; */
+    min-height: 70vh;
+    line-height: 70vh;
 }
-form{
+div.center-block{
     border-radius: 16px;
-    background-color: cornflowerblue;
     padding: 24px;
     line-height: 1;
-    text-align: left;
+    text-align: center;
+    background-color: #fffd;
+    max-width: 300px;
     display: inline-block;
     box-sizing: content-box;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 16px;
+    margin-bottom: 16px;
     vertical-align: middle;
-    max-width: 320px;
+    /* border: 1px solid; */
+    box-shadow: 1px 1px 4px gray;
+}
+
+div.center-block h1{
+    color: cornflowerblue;
+}
+
+
+form{
+    /* border-radius: 16px; */
+    /* background-color: cornflowerblue; */
+    /* padding: 24px; */
+    /* line-height: 1; */
+    text-align: left;
+    /* color: black; */
+    /* display: inline-block; */
+    /* box-sizing: content-box; */
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+    /* vertical-align: middle; */
+    /* max-width: 320px; */
 }
 
 /* select all form input here and make it their width 100% */
@@ -41,8 +72,9 @@ form button{
 }
 
 label{
-    color: cornsilk;
-    font-weight: bold;
+    /* color: cornsilk; */
+    /* font-weight: bold; */
+    /* margin-bottom: 9px; */
 }
 
 div.error{

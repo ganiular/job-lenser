@@ -12,15 +12,14 @@
 </head>
 
 <body>
-    <header>
+    <header class="top-bar">
         {%block header%}
         <ul id="menu">
             {% block menulist %}
                 {% if session['user_id'] or session['temporary_id'] %}
-                <li><a href="{{url_for('auth.signout')}}">Sign Out</a></li>
+                <li><a href="{{url_for('auth.signout')}}">Logout</a></li>
                 {% else %}
                 <li><a href="{{url_for('auth.signin')}}">Sign In</a></li>
-                <li><a href="{{url_for('auth.signup')}}">Sign Up</a></li>
                 {% endif %}
             {%endblock%}
         </ul>

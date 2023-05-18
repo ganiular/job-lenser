@@ -5,6 +5,11 @@
     margin: 10px;
 }
 
+.empty-message{
+    text-align: center;
+    margin: 32px;
+}
+
 .profile-img{
     min-width: 52px;
     height: 52px;

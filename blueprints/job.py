@@ -1,6 +1,6 @@
-from flask import Blueprint, request, session, redirect, render_template, abort
+from flask import Blueprint, request, session, redirect, render_template, abort, flash, get_flashed_messages
 from database import db_session as db
-from models import Applicant, Employer, JobOffer, Qualification
+from models import Applicant, Employer, JobOffer, Qualification, Skill
 
 bp = Blueprint('job', __name__)
 
@@ -25,8 +25,11 @@ def must_login():
 @bp.get('/jobs')
 def create_job():
     qualifications = db.query(Qualification).order_by(Qualification.level.desc()).all()
-
-    return render_template('create_job.html', qualifications=qualifications)
+    skills = db.query(Skill).all()
+    error = None
+    for msg in get_flashed_messages():
+        error = msg
+    return render_template('create_job.html', qualifications=qualifications, skills=skills, error=error)
 
 @bp.post('/jobs')
 def create_job_post():
@@ -39,26 +42,32 @@ def create_job_post():
     
     title = request.form['title'].strip()
     description = request.form['description'].strip()
-    location = request.form['location'].strip()
+    # location = request.form['location'].strip()
     min_qualification = request.form['qualification']
-
-    # remove spaces and convert it to lowercase
-    skills = request.form.get('skills').replace(' ', '').strip(',').lower()
+    
+    skills = []
+    for skill in request.form.getlist('skills'):
+        if skill:
+            skills.append(skill)
+    skills = ','.join(skills)
     
 
     # validate inputs
     error = None
-    if not(title and description and location):
+    if not(title and description):
         error = 'All fields are required'
-
+    elif not skills:
+        error='Select one or more skills'
+        
     if error is not None:
-        return render_template('create_job.html', error=error)
+        flash(error)
+        return redirect('/jobs')
     
     job_offer = JobOffer(
         employer_id=user_id, 
         title=title, 
         description=description, 
-        location=location,
+        # location=location,
         min_qualification_level=min_qualification,
         skills=skills
     )
@@ -84,8 +93,8 @@ def job(job_id):
             if skill in job_offer_skills:
                 count += 1
         applicant.accuracy = int(70 * count / len(job_offer_skills))
-        applicant.accuracy += int(30 / (job_offer.min_qualification_level - applicant.qualification_level))
+        applicant.accuracy += int(30 / (job_offer.min_qualification_level - applicant.qualification_level + 1))
     
-    sorted(applicants, key=lambda x: x.accuracy, reverse=True)
+    applicants = sorted(applicants, key=lambda x: x.accuracy, reverse=True)
     return render_template('job.html', job_offer=job_offer, applicants=applicants)
 

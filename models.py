@@ -26,7 +26,7 @@ class Applicant(Base):
 class Employer(Base):
     __tablename__ = 'employers'
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    sector = Column(String, nullable=False)
+    # sector = Column(String, nullable=False)
     profile_picture = Column(String, nullable=False)
     user = relationship("User")
     job_offers = relationship("JobOffer", back_populates="employer")
@@ -37,12 +37,17 @@ class Qualification(Base):
     level = Column(Integer, nullable=False, unique=True, primary_key=True)
     applicant = relationship('Applicant', back_populates='qualification')
 
+class Skill(Base):
+    __tablename__ = 'skills'
+    id = Column(Integer,primary_key=True, autoincrement="auto")
+    name = Column(String, nullable=False, unique=True)
+
 class JobOffer(Base):
     __tablename__ = 'job_offers'
     id = Column(Integer, primary_key=True, autoincrement="auto")
     employer_id = Column(Integer, ForeignKey('employers.user_id'))
     title = Column(String, nullable=False)
-    location = Column(String, nullable=False)
+    # location = Column(String, nullable=False)
     description = Column(String, nullable=False)
     min_qualification_level = Column(Integer, ForeignKey("qualifications.level"), nullable=False)
     min_qualification = relationship('Qualification')
@@ -81,7 +86,7 @@ def pulate_users():
 
     employer = Employer(
         user_id=user2.id, 
-        sector='Faculty of Computing', 
+        # sector='Faculty of Computing', 
         profile_picture=''
     )
 
@@ -105,4 +110,10 @@ def pulate_qualifications():
         db_session.add(
             Qualification(name=q, level=l)
         )
+    db_session.commit()
+
+def pulate_skills():
+    skills = ['communication', 'driving', 'hardwording']
+    for sk in skills:
+        db_session.add(Skill(name=sk))
     db_session.commit()

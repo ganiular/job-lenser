@@ -11,7 +11,7 @@
     <div>{{employer.user.name }}</div>
     <span class="caption">Employer</span>
 </div>
-<div>
+<section>
     <h2 class="header">Outbox Messages</h2>
     <hr>
     {% for message in messages %}
@@ -26,6 +26,8 @@
                 <div class="msg">{{message.message}}</div>
             </div>
         </div>
+    {% else %} 
+    <div class="empty-message">No Outbox Message</div>
     {% endfor %}
-</div>
+</section>
 {%endblock%}

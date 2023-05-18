@@ -4,22 +4,40 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='auth_form.css') }}">
 {%endblock%}
 
-{%block header%}
-    {{ super() }}
-    <div class="title">{%block title%}Complete Registration{%endblock%}</div>
-{%endblock%}
-
 {%block body%}
-<form action="" method="post" enctype="multipart/form-data">
-    <div>
-        <label for="org-name">Sector/Faculty:</label>
-        <input type="text" name="org-name" value="{{request.form['org-name']}}" required>
-    </div>
-    <div>
-        <label for="org-picture">Profile Picture:</label>
-        <input type="file" accept="image/*" name="org-picture" required>
-    </div>
-    <button>Submit</button>
-    {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}
-</form>
+<div class="center-block">
+    <h1>{%block title%}Complete Registration{%endblock%}</h1>
+    <form class="clear-fix" method="post" enctype="multipart/form-data" autocomplete="off">
+        <div>
+            <label for="name">Full Name:</label>
+            <input type="text" name="name" value="{{request.form['name']}}" required>
+        </div>
+        <div>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" name="phone" value="{{request.form['phone']}}" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" name="email" value="{{request.form['email']}}" required>
+        </div>
+        <!-- <div>
+            <label for="org-name">Sector/Faculty:</label>
+            <input type="text" name="org-name" value="{{request.form['org-name']}}" required>
+        </div> -->
+        <div>
+            <label for="org-picture">Profile Picture:</label>
+            <input type="file" accept="image/*" name="org-picture" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" name="password" minlength="6" required>
+        </div>
+        <div>
+            <label for="cpassword">Confirm Password:</label>
+            <input type="password" name="cpassword"  required>
+        </div>
+        <button>Submit</button>
+        {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}
+    </form>
+</div>
 {%endblock%}

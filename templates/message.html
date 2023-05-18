@@ -5,26 +5,29 @@
 {%endblock%}
 
 {%block body%}
-<div class="title">
-    <img class="profile-pic" src="/uploads/profile-pictures/{{applicant.user_id}}/{{applicant.profile_picture}}" alt="">
-    <div>{{applicant.user.name }}</div>
-    <span class="caption">Applicant</span>
+<div class="center-block">
+    <div class="title">
+        <img class="profile-pic" src="/uploads/profile-pictures/{{applicant.user_id}}/{{applicant.profile_picture}}" alt="">
+        <div>{{applicant.user.name }}</div>
+        <span class="caption">Applicant</span>
+    </div>
+    
+    <form action="{{ url_for('account.message', applicant_id=applicant.user.id)}}" method="post">
+        <div>
+            <label for="job_offer">Select Job Offer:</label>
+            <select name="job_offer" id="job_offer" required>
+                <option value="" hidden selected disabled> ---------- </option>
+                {% for job_offer in employer.job_offers %}
+                <option value="{{job_offer.id}}" {{'selected' if job_offer.id == request.form['job_offer'] else '' }}>{{job_offer.title}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="message">Message:</label>
+            <textarea name="message" id="message" cols="30" rows="3" placeholder="Enter your message here" value="{{request.form['message']}}" required minlength="20"></textarea>
+        </div>
+        <button>Send</button>
+        {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}
+    </form>
 </div>
-<form action="{{ url_for('account.message', applicant_id=applicant.user.id)}}" method="post">
-    <div>
-        <label for="job_offer">Select Job Offer:</label>
-        <select name="job_offer" id="job_offer" required>
-            <option value="" hidden selected disabled> ---------- </option>
-            {% for job_offer in employer.job_offers %}
-            <option value="{{job_offer.id}}" {{'selected' if job_offer.id == request.form['job_offer'] else '' }}>{{job_offer.title}}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <label for="message">Message:</label>
-        <textarea name="message" id="message" cols="30" rows="3" placeholder="Enter your message here" value="{{request.form['message']}}" required minlength="20"></textarea>
-    </div>
-    <button>Send</button>
-    {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}
-</form>
 {%endblock%}

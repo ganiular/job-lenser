@@ -1,4 +1,4 @@
-body{margin-bottom: 52px;}
+body{margin-bottom: 52px;margin: 0;padding: 0;}
 .logo{
     float: left;
     height: 50px;
@@ -15,6 +15,9 @@ body{margin-bottom: 52px;}
     content: '';
     display: block;
     clear: both;
+}
+.top-bar{
+    background-color: #fffc;
 }
 .clear-fix.float-children-left *{
     float: left;
@@ -58,7 +61,7 @@ footer marquee{
 
 #menu{
     list-style: none;
-    margin: 0;
+    margin: 12px;
     padding: 0;
     text-align: right;
     float: right;
@@ -74,6 +77,9 @@ footer marquee{
     border: 1px solid cornflowerblue;
     border-radius: 16px;
     color: cornflowerblue;
+}
+section{
+    margin: 16px;
 }
 section header{
     display: flex;

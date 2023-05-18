@@ -11,11 +11,11 @@
     <li>Title: {{job_offer.title}}</li>
     <li>Description: {{job_offer.description}}</li>
     <li>Employer: {{job_offer.employer.user.name}}</li>
-    <li>Sector/Faculty: {{job_offer.employer.sector}}</li>
-    <li>Location: {{job_offer.location}}</li>
+    <!-- <li>Sector/Faculty: {{job_offer.employer.sector}}</li> -->
+    <!-- <li>Location: {{job_offer.location}}</li> -->
     <li>Minimum Qualification: {{job_offer.min_qualification.name}}</li>
-    <li>Title: {{job_offer.time_created}}</li>
-    <li>Skills: Skills:
+    <li>Date Created: {{job_offer.time_created}}</li>
+    <li>Required Skills:
         <ul>
             {% for skill in job_offer.skills.split(',') %}
             <li>{{ skill }}</li>
@@ -39,5 +39,7 @@
         </div>
         <div class="accuracy">{{applicant.accuracy}}%</div>
     </div>
+{% else %} 
+<div class="empty-message">No Applicant found for this job offer</div>
 {% endfor %}
 {% endblock %}

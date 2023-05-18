@@ -30,7 +30,7 @@ CREATE TABLE "applicants" (
 
 CREATE TABLE "employers" (
 	"user_id"	INTEGER NOT NULL UNIQUE,
-	"sector"	TEXT NOT NULL,
+	-- "sector"	TEXT NOT NULL,
 	"profile_picture"	TEXT NOT NULL,
 	FOREIGN KEY("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY("user_id")

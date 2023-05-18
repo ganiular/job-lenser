@@ -10,7 +10,7 @@ Base = declarative_base()
 # Base.query = db_session.query_property()
 
 def init_db():
-    from models import pulate_qualifications, pulate_users
+    from models import pulate_qualifications, pulate_users, pulate_skills
     import shutil
 
     Base.metadata.create_all(bind=engine)
@@ -20,6 +20,7 @@ def init_db():
     try:
         pulate_qualifications()
         pulate_users()
+        pulate_skills()
         shutil.rmtree('uploads')
     except:
         db_session.rollback()

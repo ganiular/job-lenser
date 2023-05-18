@@ -10,7 +10,7 @@
     <div>{{applicant.user.name }}</div>
     <span class="caption">Applicant</span>
 </div>
-<div>
+<section>
     <h2 class="header">Inbox Messages</h2>
     <hr>
     {% for message in messages %}
@@ -25,6 +25,10 @@
                 <div class="msg">{{message.message}}</div>
             </div>
         </div>
+    {% else %}
+    <div class="empty-message">
+        No Inbox Message
+    </div>
     {% endfor %}
-</div>
+</section>
 {%endblock%}
