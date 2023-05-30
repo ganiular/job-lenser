@@ -78,7 +78,7 @@ def message_list(partner_id):
         return render_template('message_list.html', messages = messages, partner=partner)
     else:
         partner = db.query(Applicant).filter(Applicant.user_id == partner_id).first()
-        messages = db.query(Message).filter(Message.employer_id == partner_id, Message.applicant_id == user_id).all()
+        messages = db.query(Message).filter(Message.employer_id == user_id, Message.applicant_id == partner_id).all()
         return render_template('message_list.html', messages = messages, partner=partner)
 
 @bp.get('/profile/messages')

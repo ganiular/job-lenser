@@ -18,7 +18,7 @@ def must_complete_account_registration():
 
 @bp.before_request
 def must_login():
-    user_id = session.get('user_id')
+    user_id = session.get('user_id') 
     if user_id is None:
         return redirect('/')
     
@@ -30,7 +30,7 @@ def create_job():
         applicant = db.query(Applicant).filter(Applicant.user_id == user_id).first()
         applicant_skills = applicant.skills.split(',')
 
-        job_offers = db.query(JobOffer).filter(applicant.qualification_level <= JobOffer.min_qualification_level)
+        job_offers = db.query(JobOffer).filter(applicant.qualification_level <= JobOffer.min_qualification_level).all()
         for job_offer in job_offers:
             count = 0
             job_offer_skills = job_offer.skills.split(',')
@@ -39,7 +39,7 @@ def create_job():
                     count += 1
             job_offer.accuracy = int(70 * count / len(job_offer_skills))
             job_offer.accuracy += int(30 * applicant.qualification_level / job_offer.min_qualification_level )
-
+            print(job_offer.title, job_offer.accuracy)
         job_offers = sorted(job_offers, key=lambda x: x.accuracy, reverse=True)
         return render_template('job_offers.html', applicant=applicant, job_offers=job_offers)
     

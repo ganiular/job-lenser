@@ -24,12 +24,8 @@
                 
             {% else %} 
             <img src="/uploads/profile-pictures/{{message.applicant_id}}/{{message.applicant.profile_picture}}" alt="" class="profile-img">
-            <div class="details">
-                <div class="row">
-                    <a href="/profile/{{message.applicant_id}}" class="name">{{message.applicant.user.name}}</a>
-                </div>
-                
-            </div>
+                    <a href="/chats/{{message.applicant_id}}" class="name">{{message.applicant.user.name}}</a>
+            
             {% endif %}
         </div>
     {% else %}

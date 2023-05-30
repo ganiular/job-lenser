@@ -54,6 +54,7 @@ class JobOffer(Base):
     skills = Column(String, nullable=False)
     time_created = Column(DateTime(timezone=True), server_default=func.current_timestamp())
     employer = relationship("Employer", back_populates='job_offers')
+    
 
 class Message(Base):
     __tablename__ = 'messages'

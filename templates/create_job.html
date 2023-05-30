@@ -35,7 +35,7 @@
     </div> -->
     <div>
         <label for="description">Full Description:</label>
-        <textarea name="description" id="description" cols="30" rows="3" placeholder="" value="{{request.form['description']}}" required minlength="20"></textarea>
+        <textarea name="description" id="description" cols="30" rows="3" placeholder="" value="{{request.form['description']}}" required minlength="1"></textarea>
     </div>
     <button>Create</button>
     {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}

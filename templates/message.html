@@ -30,7 +30,7 @@
         </div>
         <div>
             <label for="message">Message:</label>
-            <textarea name="message" id="message" cols="30" rows="3" placeholder="Enter your message here" value="{{request.form['message']}}" required minlength="20"></textarea>
+            <textarea name="message" id="message" cols="30" rows="3" placeholder="Enter your message here" value="{{request.form['message']}}" required minlength="1"></textarea>
         </div>
         <button>Send</button>
         {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}
