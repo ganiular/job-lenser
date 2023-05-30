@@ -16,10 +16,17 @@
         {%block header%}
         <ul id="menu">
             {% block menulist %}
-                {% if session['user_id'] or session['temporary_id'] %}
-                <li><a href="{{url_for('auth.signout')}}">Logout</a></li>
+                <li><a class="{{'active' if request.path == '/' else ''}}" href="/">Home</a></li>
+                <li><a class="{{'active' if request.path == '/about' else ''}}" href="/about">About</a></li>
+                {% if session['user_id'] %}
+                {% if session['account_type'] == 'applicant' %} 
+                <li><a class="{{'active' if request.path == '/jobs' else ''}}" href="/jobs">Jobs</a></li>
+                {% endif %}
+                <li><a class="{{'active' if request.path == '/profile/%d' % session['user_id'] else ''}}" href="/profile/{{session['user_id']}}">Profile</a></li>
+                <li><a class="{{'active' if request.path == '/chats' else ''}}" href="/chats">Messages</a></li>
+                <li><a class="{{'active' if request.path == '/signout' else ''}}" href="{{url_for('auth.signout')}}">Logout</a></li>
                 {% else %}
-                <li><a href="{{url_for('auth.signin')}}">Sign In</a></li>
+                <li><a class="{{'active' if request.path == '/signin' else ''}}" href="{{url_for('auth.signin')}}">Login</a></li>
                 {% endif %}
             {%endblock%}
         </ul>
@@ -33,7 +40,17 @@
         {%block body%}{%endblock%}
     </main>
     <footer>
-        <marquee>Bayero University, Kano</marquee>
+        <div>
+            <h2>Job Lancer</h2>
+            <h3>67 million professionals on demand</h3>
+            <p>Why hire people when you can simply integrate our talented cloud workforce instead? </p>
+        </div>
+
+        <div>
+            <h2>Job Lancer</h2>
+            <h3>67 million professionals on demand</h3>
+            <p>Why hire people when you can simply integrate our talented cloud workforce instead? </p>
+        </div>
     </footer>
 </body>
 </html>

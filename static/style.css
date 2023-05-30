@@ -1,18 +1,38 @@
 body {
-    background-color: antiquewhite;
-    background-image: url('/static/images/senate_building.jpeg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100vh;
+    /* background-color: antiquewhite; */
+    /* background-image: url('/static/images/senate_building.jpeg'); */
+    /* background-repeat: no-repeat; */
+    /* background-size: cover; */
+    /* height: 100vh; */
 }
 
 main {
     text-align: center;
-    min-height: 70vh;
-    line-height: 70vh;
+    min-height: 100vh;
+    /* line-height: 70vh; */
+}
+
+.over {
+    text-align: left;
+    padding: 54px;
+    background-color: #00000044;
+    height: 100vh;
+    color: white;
+}
+
+.over li {
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+.over h1 {
+    font-size: xxx-large;
 }
 
 div.center-block {
+    /* position: absolute; */
+    /* top: 100px; */
     border-radius: 16px;
     padding: 24px;
     line-height: 1;
@@ -57,4 +77,19 @@ div.center-block>div {
     color: white;
     margin: 0 10px;
     font-size: medium;
+}
+
+#images-container{
+    position: relative;
+    z-index: -1;
+    /* height: 100vh; */
+}
+
+#images-container img{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    display: none;
 }

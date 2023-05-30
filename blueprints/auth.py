@@ -113,7 +113,7 @@ def signin_post():
     #         session['temporary_id'] = user.id
     #         return redirect('/signup_employer')
     session['user_id'] = user.id
-    return redirect('/')
+    return redirect('/profile/%d' % user.id)
 
 @bp.get('/signout')
 def signout():
@@ -191,7 +191,7 @@ def signup_employer_post():
     session.clear()
     session['account_type'] = user.account_type
     session['user_id'] = user.id
-    return redirect('/')
+    return redirect('/profile/%d' %user.id)
     
 
 @bp.get('/signup_applicant')
@@ -294,4 +294,4 @@ def signup_applicant_post():
     session.clear()
     session['account_type'] = user.account_type
     session['user_id'] = user.id
-    return redirect('/')
+    return redirect('/profile/%d' % user.id)

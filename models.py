@@ -58,12 +58,13 @@ class JobOffer(Base):
 class Message(Base):
     __tablename__ = 'messages'
     id = Column(Integer, primary_key=True, autoincrement="auto")
-    sender_id = Column(Integer, ForeignKey('employers.user_id'))
-    receiver_id = Column(Integer, ForeignKey('applicants.user_id'))
+    employer_id = Column(Integer, ForeignKey('employers.user_id'))
+    applicant_id = Column(Integer, ForeignKey('applicants.user_id'))
+    sender_id = Column(Integer, ForeignKey('users.id'))
     message = Column(String, nullable=False)
-    job_offer_id = Column(Integer, ForeignKey('job_offers.id'))
-    sender = relationship("Employer")
-    receiver = relationship("Applicant")
+    job_offer_id = Column(Integer, ForeignKey('job_offers.id'), nullable=True)
+    employer = relationship("Employer")
+    applicant = relationship("Applicant")
     job_offer = relationship('JobOffer')
     time_created = Column(DateTime(timezone=True), server_default=func.current_timestamp())
 

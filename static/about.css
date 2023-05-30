@@ -1,0 +1,46 @@
+main{
+    text-align: center;
+    margin-bottom: 3em;
+}
+
+.who {
+    color: #55645c;
+    margin: 4px;
+}
+.name{
+    font-size: larger;
+}
+
+block2.about {
+}
+
+.block1 {
+    background-color: aliceblue;
+    padding: 10% 12%;
+}
+
+.block2 {padding: 16px;}
+
+.block2.about {}
+
+.header {
+    /* padding: 5% 12% 2%; */
+}
+
+p.about {
+    margin-left: 12%;
+    margin-right: 12%;
+    line-height: 1.4;
+}
+
+.block2 > p.about {
+    margin: 1em 25%;
+}
+
+.dev-img{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    outline: groove;
+}

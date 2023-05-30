@@ -1,4 +1,4 @@
-body {
+main {
     background-color: antiquewhite;
     background-image: url('/static/images/senate_building.jpeg');
     background-repeat: no-repeat;
@@ -7,8 +7,8 @@ body {
 }
 main{
     text-align: center;
-    min-height: 70vh;
-    line-height: 70vh;
+    /* min-height: 70vh; */
+    /* line-height: 70vh; */
 }
 div.center-block{
     border-radius: 16px;

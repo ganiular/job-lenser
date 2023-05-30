@@ -15,6 +15,11 @@ app.register_blueprint(auth.bp)
 app.register_blueprint(account.bp)
 app.register_blueprint(job.bp)
 
+
+@app.get('/about')
+def about():
+    return render_template('about.html')
+
 # file downloads
 @app.get('/uploads/<path:filename>')
 def download_file(filename):

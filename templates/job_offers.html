@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="/static/block_list.css">
+{% endblock %}
+
+{% block body %} 
+<div class="title">
+    <img class="profile-pic" src="/uploads/profile-pictures/{{applicant.user_id}}/{{applicant.profile_picture}}" alt="">
+    <div>{{applicant.user.name }}</div>
+    <span class="caption">Applicant</span>
+</div>
+<section>
+    <h2 class="header">{% block title %}Job Offers{% endblock %}</h2>
+    <hr>
+    {% for job_offer in job_offers %} 
+    <div class="list-item">
+        <img src="/uploads/profile-pictures/{{job_offer.employer_id}}/{{job_offer.employer.profile_picture}}" alt="" class="profile-img">
+        <div class="details">
+            <a href="/jobs/{{job_offer.id}}" class="name">{{job_offer.title}}</a>
+            <div class="cert"><span class="label">certificate</span> {{job_offer.min_qualification.name}}</div>
+            <div class="skills">
+                {% for skill in job_offer.skills.split(',') %}
+                <span>{{ skill }}</span>
+                {% endfor %}
+            </div>
+            <div class="">{{job_offer.description}}</div>
+            <div>{{job_offer.employer.user.name}}</div>
+        </div>
+        <div class="accuracy">{{job_offer.accuracy}}%</div>
+    </div>
+    {% endfor %}
+{% endblock %}

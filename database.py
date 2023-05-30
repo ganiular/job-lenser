@@ -19,7 +19,7 @@ def init_db():
     # and remove uploaded files
     try:
         pulate_qualifications()
-        pulate_users()
+        # pulate_users()
         pulate_skills()
         shutil.rmtree('uploads')
     except:

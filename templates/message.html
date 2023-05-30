@@ -7,18 +7,24 @@
 {%block body%}
 <div class="center-block">
     <div class="title">
+        {% if session['account_type'] == 'employer' %}
         <img class="profile-pic" src="/uploads/profile-pictures/{{applicant.user_id}}/{{applicant.profile_picture}}" alt="">
         <div>{{applicant.user.name }}</div>
         <span class="caption">Applicant</span>
+        {% else %}
+        <img class="profile-pic" src="/uploads/profile-pictures/{{employer.user_id}}/{{employer.profile_picture}}" alt="">
+        <div>{{employer.user.name }}</div>
+        <span class="caption">Employer</span>
+        {% endif %}
     </div>
     
-    <form action="{{ url_for('account.message', applicant_id=applicant.user.id)}}" method="post">
+    <form action="" method="post">
         <div>
             <label for="job_offer">Select Job Offer:</label>
             <select name="job_offer" id="job_offer" required>
                 <option value="" hidden selected disabled> ---------- </option>
                 {% for job_offer in employer.job_offers %}
-                <option value="{{job_offer.id}}" {{'selected' if job_offer.id == request.form['job_offer'] else '' }}>{{job_offer.title}}</option>
+                <option value="{{job_offer.id}}" {{'selected' if job_offer.id == request.form['job_offer'] or '%d' % job_offer.id == request.args.get('job') else '' }}>{{job_offer.title}}</option>
                 {% endfor %}
             </select>
         </div>

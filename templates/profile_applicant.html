@@ -3,7 +3,6 @@
 {%block menulist%}
     {% if (user_id == session['user_id']) %}
     <!-- <li><a href="/profile/edit">Edit Profile</a></li> -->
-    <li><a href="/profile/messages">My Inbox</a></li>
     {% endif %}
     {{ super() }}
 {%endblock%}
@@ -18,7 +17,7 @@
         <header>
             <h2 class="header">Details</h2>
             {% if session['account_type'] == 'employer' %}
-            <a href="{{url_for('account.message', applicant_id=applicant.user.id)}}" class="action"><span class="icon">&#128231;</span> Send Job Offer</a>
+            <a href="/profile/messages/{{applicant.user.id}}" class="action"><span class="icon">&#128231;</span> Send Job Offer</a>
             {% endif %}
         </header>
         <hr>

@@ -1,0 +1,41 @@
+{%extends 'base.html'%}
+
+{%block head%}
+{{ super() }}
+<link rel="stylesheet" href="/static/block_list.css">
+{%endblock%}
+
+{% block title %}Chat{% endblock %} 
+
+{%block body%}
+<div class="title">
+    <img class="profile-pic" src="/uploads/profile-pictures/{{me.user_id}}/{{me.profile_picture}}" alt="">
+    <div>{{me.user.name }}</div>
+    <span class="caption">{{'Applicant' if session['account_type'] == 'applicant' else 'Employer'}}</span>
+</div>
+<section>
+    <h2 class="header">{{'Applicants' if session['account_type'] == 'employer' else 'Employers'}} Chat</h2>
+    <hr>
+    {% for message in messages %}
+        <div class="list-item center">
+            {%if session['account_type'] == 'applicant' %}
+            <img src="/uploads/profile-pictures/{{message.employer_id}}/{{message.employer.profile_picture}}" alt="" class="profile-img">
+                    <a href="/chats/{{message.employer_id}}" class="name">{{message.employer.user.name}}</a>
+                
+            {% else %} 
+            <img src="/uploads/profile-pictures/{{message.applicant_id}}/{{message.applicant.profile_picture}}" alt="" class="profile-img">
+            <div class="details">
+                <div class="row">
+                    <a href="/profile/{{message.applicant_id}}" class="name">{{message.applicant.user.name}}</a>
+                </div>
+                
+            </div>
+            {% endif %}
+        </div>
+    {% else %}
+    <div class="empty-message">
+        No Chat History
+    </div>
+    {% endfor %}
+</section>
+{%endblock%}

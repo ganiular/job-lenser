@@ -1,0 +1,28 @@
+{%extends 'base.html'%}
+
+{%block head%}
+    {{ super() }}
+    <link rel="stylesheet" href="/static/about.css">
+{% endblock %}
+{%block body%}
+<div class="block1">
+    <h1 class="header">About Job Lancer</h1>
+    <p class="about">
+        Job Lancer is a web based system that connects applicants with employers and matches them based on eligibilty. This sytem will use aweb web based platform for accessibilty and ease of use.
+        the key feature of this system allows job posting, applicant and employer registration and the matching algorithm.employers can post job, include details such as job title, requirements,
+    </p>    
+</div>
+<div class="block2">
+    <img class="dev-img" src="/static/images/me.jpeg" alt="">
+    <div class="who">Student</div>
+    <div class="name">Lorem Ipsum</div>
+    <p class="about">Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis perspiciatis, cumque eum asperiores in iusto inventore sit quaerat perferendis, nostrum omnis tempora vero animi sint accusamus illo laborum? Excepturi, minus?</p>
+</div>
+<div class="block2">
+    <img class="dev-img" src="/uploads/profile-pictures/1/avater.png" alt="">
+    <div class="who">Supervisor</div>
+    <div class="name">Lorem Ipsum</div>
+    <p class="about">Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis perspiciatis, cumque eum asperiores in iusto inventore sit quaerat perferendis, nostrum omnis tempora vero animi sint accusamus illo laborum? Excepturi, minus?</p>
+</div>
+{% endblock %}
+

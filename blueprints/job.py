@@ -24,6 +24,25 @@ def must_login():
     
 @bp.get('/jobs')
 def create_job():
+    account_type = session.get('account_type')
+    if account_type == 'applicant':
+        user_id = session.get('user_id')
+        applicant = db.query(Applicant).filter(Applicant.user_id == user_id).first()
+        applicant_skills = applicant.skills.split(',')
+
+        job_offers = db.query(JobOffer).filter(applicant.qualification_level <= JobOffer.min_qualification_level)
+        for job_offer in job_offers:
+            count = 0
+            job_offer_skills = job_offer.skills.split(',')
+            for skill in job_offer_skills:
+                if skill in applicant_skills:
+                    count += 1
+            job_offer.accuracy = int(70 * count / len(job_offer_skills))
+            job_offer.accuracy += int(30 * applicant.qualification_level / job_offer.min_qualification_level )
+
+        job_offers = sorted(job_offers, key=lambda x: x.accuracy, reverse=True)
+        return render_template('job_offers.html', applicant=applicant, job_offers=job_offers)
+    
     qualifications = db.query(Qualification).order_by(Qualification.level.desc()).all()
     skills = db.query(Skill).all()
     error = None
@@ -93,7 +112,7 @@ def job(job_id):
             if skill in job_offer_skills:
                 count += 1
         applicant.accuracy = int(70 * count / len(job_offer_skills))
-        applicant.accuracy += int(30 / (job_offer.min_qualification_level - applicant.qualification_level + 1))
+        applicant.accuracy += int(30 * applicant.qualification_level / job_offer.min_qualification_level)
     
     applicants = sorted(applicants, key=lambda x: x.accuracy, reverse=True)
     return render_template('job.html', job_offer=job_offer, applicants=applicants)
