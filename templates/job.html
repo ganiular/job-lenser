@@ -8,8 +8,6 @@
 {% block body %}
 <section class="center-block">
     <h1>Job Offer</h1>
-    <h2>{{job_offer.title}}</h2>
-    <p>{{job_offer.description}}</p>
     <ul>
         <li>Title: {{job_offer.title}}</li>
         <li>Description: {{job_offer.description}}</li>
@@ -31,13 +29,13 @@
 
 <section>
     <header>
-        <h2 class="header">Details</h2>
+        <h2 class="header">Applicants</h2>
         {% if session['account_type'] == 'applicant' %}
         <a href="{{url_for('account.message', receiver_id=job_offer.employer_id)}}?job={{job_offer.id}}" class="action"><span class="icon">&#128231;</span> Request Job Offer</a>
         {% endif %}
     </header>
+    <hr>
 </section>
-<h1>Applicants</h1>
 {% for applicant in applicants %} 
     <div class="list-item">
         <img src="/uploads/profile-pictures/{{applicant.user_id}}/{{applicant.profile_picture}}" alt="" class="profile-img">
