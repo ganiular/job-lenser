@@ -6,35 +6,38 @@
 
 {%block body%}
 <div class="center-block">
-    <h1>{%block title%}Complete Registration{%endblock%}</h1>
-    <form class="clear-fix" method="post" enctype="multipart/form-data" autocomplete="off">
+    <h1>{%block title%}{{'Edit Profile Details' if employer else 'Employer Registration'}}{%endblock%}</h1>
+    <form class="clear-fix" action="{{'/profile/edit' if employer else ''}}" method="post" enctype="multipart/form-data" autocomplete="off">
         <div>
             <label for="name">Full Name:</label>
-            <input type="text" name="name" value="{{request.form['name']}}" required>
+            <input type="text" name="name" value="{% if employer %}{{employer.user.name}}{%else%}{{request.form['name']}}{%endif%}" required>
         </div>
         <div>
             <label for="phone">Phone Number:</label>
-            <input type="tel" name="phone" value="{{request.form['phone']}}" required>
+            <input type="tel" name="phone" value="{% if employer %}{{employer.user.phone}}{%else%}{{request.form['phone']}}{%endif%}" required>
         </div>
         <div>
             <label for="email">Email:</label>
-            <input type="email" name="email" value="{{request.form['email']}}" required>
+            <input type="email" name="email" value="{% if employer %}{{employer.user.email}}{%else%}{{request.form['email]}}{%endif%}" required>
         </div>
         <!-- <div>
             <label for="org-name">Sector/Faculty:</label>
             <input type="text" name="org-name" value="{{request.form['org-name']}}" required>
         </div> -->
-        <div>
-            <label for="org-picture">Profile Picture:</label>
-            <input type="file" accept="image/*" name="org-picture" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" minlength="6" required>
-        </div>
-        <div>
-            <label for="cpassword">Confirm Password:</label>
-            <input type="password" name="cpassword"  required>
+        {% if employer %}<div style="text-align: center;margin: 2px;font-weight: bold;text-transform: uppercase;">Optional Fields</div>{% endif %}
+        <div {% if employer %} style="background-color: #0042;padding: 16px;border-radius: 16px;margin-bottom: 12px;" {%endif%}>
+            <div>
+                <label for="org-picture">Profile Picture:</label>
+                <input type="file" accept="image/*" name="org-picture" >
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" minlength="6" >
+            </div>
+            <div>
+                <label for="cpassword">Confirm Password:</label>
+                <input type="password" name="cpassword"  >
+            </div>
         </div>
         <button>Submit</button>
         {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}

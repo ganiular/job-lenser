@@ -6,30 +6,30 @@
 
 {%block body%}
 <div class="center-block">
-    <h1>{%block title%}Complete Your Registration{%endblock%}</h1>
-    <form class="clear-fix" method="post" enctype="multipart/form-data" autocomplete="off">
+    <h1>{%block title%}{{'Edit Profile Details' if applicant else 'Applicant Registration'}}{%endblock%}</h1>
+    <form class="clear-fix" action="{{'/profile/edit' if applicant else ''}}" method="post" enctype="multipart/form-data" autocomplete="off">
         <div>
             <label for="name">Full Name:</label>
-            <input type="text" name="name" value="{{request.form['name']}}" required>
+            <input type="text" name="name" value="{% if applicant %}{{applicant.user.name}}{%else%}{{request.form['name']}}{%endif%}" required>
         </div>
         <div>
             <label for="phone">Phone Number:</label>
-            <input type="tel" name="phone" value="{{request.form['phone']}}" required>
+            <input type="tel" name="phone" value="{% if applicant %}{{applicant.user.phone}}{%else%}{{request.form['phone']}}{%endif%}" required>
         </div>
         <div>
             <label for="email">Email:</label>
-            <input type="email" name="email" value="{{request.form['email']}}" required>
+            <input type="email" name="email" value="{% if applicant %}{{applicant.user.email}}{%else%}{{request.form['email']}}{%endif%}" required>
         </div>
         <div>
             <label for="date-of-birth">Date of Birth:</label>
-            <input type="date" name="date-of-birth" value="{{request.form['date-of-birth']}}" required>
+            <input type="date" name="date-of-birth" value="{% if applicant %}{{applicant.date_of_birth}}{%else%}{{request.form['date-of-birth']}}{%endif%}" required>
         </div>
         <div>
             <label for="skills">Skills you have:</label>
             <select name="skills" required multiple>
                 <option value="" hidden selected> ---------- </option>
                 {% for skill in skills %}
-                <option value="{{skill.name}}" {{'selected' if skill.name == request.form['skills'] else '' }}>{{skill.name}}</option>
+                <option value="{{skill.name}}" {% if applicant%}{{'selected' if skill.name in applicant.skills.split(',')  else '' }}{%endif%}>{{skill.name}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -38,26 +38,30 @@
             <select name="qualification" required>
                 <option value="" hidden selected> ---------- </option>
                 {% for qualification in qualifications %}
-                <option value="{{qualification.level}}" {{'selected' if qualification.level == request.form['qualification'] else '' }}>{{qualification.name}}</option>
+                <option value="{{qualification.level}}" {%if applicant%}{{'selected' if qualification.level == applicant.qualification_level else '' }}{%endif%}>{{qualification.name}}</option>
                 {% endfor %}
             </select>
         </div>
-        <div>
-            <label for="p-picture">Profile Picture:</label>
-            <input type="file" accept="image/*" name="p-picture" required>
+        {% if applicant %}<div style="text-align: center;margin: 2px;font-weight: bold;text-transform: uppercase;">Optional Fields</div>{% endif %}
+        <div {% if applicant %} style="background-color: #0042;padding: 16px;border-radius: 16px;margin-bottom: 12px;" {%endif%}>
+            <div>
+                <label for="p-picture">Profile Picture:</label>
+                <input type="file" accept="image/*" name="p-picture">
+            </div>
+            <div>
+                <label for="resume">Resume:</label>
+                <input type="file" accept="image/*" name="resume">
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" minlength="6">
+            </div>
+            <div>
+                <label for="cpassword">Confirm Password:</label>
+                <input type="password" name="cpassword">
+            </div>
         </div>
-        <div>
-            <label for="resume">Resume:</label>
-            <input type="file" accept="image/*" name="resume" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" minlength="6" required>
-        </div>
-        <div>
-            <label for="cpassword">Confirm Password:</label>
-            <input type="password" name="cpassword"  required>
-        </div>
+        
         
         <button>Submit</button>
         {% if error %}<div class="error">{{error}}, please try again</div>{% endif %}

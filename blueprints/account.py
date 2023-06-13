@@ -1,7 +1,10 @@
-from flask import Blueprint, render_template, session, redirect, request, abort
+from datetime import date
+import os
+from flask import Blueprint, flash, get_flashed_messages, render_template, session, redirect, request, abort
 from sqlalchemy import desc
+from werkzeug.security import generate_password_hash
 from database import db_session as db
-from models import Applicant, Employer, JobOffer, Message, User
+from models import Applicant, Employer, JobOffer, Message, Qualification, Skill, User
 
 bp = Blueprint('account', __name__)
 
@@ -50,13 +53,88 @@ def profile(user_id):
 def edit_profile():
     user_id = session['user_id']
     account_type = session['account_type']
-    conn = db.connect()
-
+    
     if(account_type == 'applicant'):
-        applicant = conn.execute(
-            
-        )
+        applicant = db.query(Applicant).filter(Applicant.user_id == user_id).first()
+        qualifications = db.query(Qualification).order_by(Qualification.level.desc()).all()
+        skills = db.query(Skill).all()
+        error = None
+        for msg in get_flashed_messages():
+            error = msg
+        
+        return render_template('signup_applicant.html', qualifications=qualifications, skills=skills, error=error, applicant=applicant)
+    else:
+        employer = db.query(Employer).filter(Employer.user_id == user_id).first()
+        return render_template('signup_employer.html', employer=employer)
 
+@bp.post('/profile/edit')
+def update_profile():
+    # get all form fields
+    name = request.form.get('name', '').strip()
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    password = request.form.get('password')
+    cpassword = request.form.get('cpassword')
+    dob = request.form.get('date-of-birth')
+    qualification = request.form.get('qualification')
+    p_picture = request.files.get('p-picture')
+    org_picture = request.files.get('org-picture')
+    resume = request.files.get('resume')
+    skills = []
+    for skill in request.form.getlist('skills'):
+        if skill:
+            skills.append(skill)
+    skills = ','.join(skills)
+
+    user_id = session['user_id']
+    account_type = session['account_type']
+    error = None
+    
+    if password != '':
+        if len(password) < 6:
+            error = 'Password too short'
+        elif password != cpassword:
+            error='Password mismatch'
+    
+    if error:
+        flash(error)
+        return redirect('/profile/edit')
+    
+    values = {}
+    values[User.name] = name
+    values[User.email] = email
+    values[User.phone] = phone
+    if password:
+        values[User.password_hashed] = generate_password_hash(password)
+    
+    db.query(User).filter(User.id == user_id).update(values, synchronize_session=False)
+    
+    if(account_type == 'applicant'):
+        values = {}
+        values[Applicant.qualification_level] = qualification
+        values[Applicant.date_of_birth] = date.fromisoformat(dob)
+        values[Applicant.skills] = skills
+        if p_picture:
+            values[Applicant.profile_picture] = p_picture.filename
+            picture_path = os.path.join('uploads','profile-pictures',str(user_id))
+            p_picture.save(os.path.join(picture_path, p_picture.filename))
+        if resume:
+            values[Applicant.resume] = resume.filename
+            resume_path = os.path.join('uploads', 'resumes', str(user_id))
+            resume.save(os.path.join(resume_path, resume.filename))
+        db.query(Applicant).filter(Applicant.user_id == user_id) \
+        .update(values, synchronize_session=False)
+    else:
+        if org_picture:
+            count = db.query(Employer).filter(Employer.user_id == user_id) \
+                .update({Employer.profile_picture: org_picture.filename})
+            if count > 0:
+                picture_path = os.path.join('uploads','profile-pictures',str(user_id))
+                org_picture.save(os.path.join(picture_path, org_picture.filename))
+
+    db.commit()
+    return redirect('/profile/%d' %user_id)
+    
 @bp.get('/chats')
 def chat_list():
     user_id = session['user_id']

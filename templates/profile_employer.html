@@ -2,7 +2,7 @@
 
 {%block menulist%}
     {% if (user_id == session['user_id']) %}
-    <!-- <li><a href="/profile/edit">Edit Profile</a></li> -->
+    <li><a href="/profile/edit">Edit Profile</a></li>
     {% endif %}
     {{ super() }}
 {%endblock%}
